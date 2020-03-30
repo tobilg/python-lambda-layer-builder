@@ -81,6 +81,9 @@ if [[ -f "${CURRENT_DIR}/_clean.sh" ]]; then
 elif [[ -f "${PARENT_DIR}/_clean.sh" ]]; then
   CLEAN_PATH="${PARENT_DIR}/_clean.sh"
   echo "Using clean.sh from ../"
+elif [[ -f "${CURRENT_DIR}/$(dirname "${BASH_SOURCE[0]}")/_clean.sh" ]]; then
+  CLEAN_PATH="${PARENT_DIR}/$(dirname "${BASH_SOURCE[0]}")/_clean.sh"
+  echo "Using clean.sh from ../$(dirname "${BASH_SOURCE[0]}")"
 else
   echo "Using default cleaning step"
 fi
@@ -92,7 +95,7 @@ else
 fi
 
 # Run build
-docker run --rm -e PYTHON_VER="$PYTHON_VER" -e NAME="$NAME" -e RAW_MODE="$RAW_MODE" -v "$CURRENT_DIR":/var/task -v "$REQ_PATH":/temp/build/requirements.txt -v "$CLEAN_PATH":/temp/build/_clean.sh "lambci/lambda:build-python${PYTHON_VER}" bash /var/task/_make.sh
+docker run --rm -e PYTHON_VER="$PYTHON_VER" -e NAME="$NAME" -e RAW_MODE="$RAW_MODE" -e PARENT_DIR="${PARENT_DIR}" -e SUBDIR_MODE="$SUBDIR_MODE" -v "$CURRENT_DIR":/var/task -v "$REQ_PATH":/temp/build/requirements.txt -v "$CLEAN_PATH":/temp/build/_clean.sh "lambci/lambda:build-python${PYTHON_VER}" bash /var/task/_make.sh
 
 # Move ZIP to parent dir if SUBDIR_MODE set
 if [[ "$SUBDIR_MODE" ]]; then
@@ -101,5 +104,7 @@ if [[ "$SUBDIR_MODE" ]]; then
   if [[ -f "${PARENT_DIR}/${ZIP_FILE}" ]]; then
     mv "${PARENT_DIR}/${ZIP_FILE}" "${PARENT_DIR}/${ZIP_FILE}.bak"
   fi
-  mv "${CURRENT_DIR}/${ZIP_FILE}" "${PARENT_DIR}"
+  if [[ "$RAW_MODE" != true ]]; then
+    mv "${CURRENT_DIR}/${ZIP_FILE}" "${PARENT_DIR}"
+  fi
 fi

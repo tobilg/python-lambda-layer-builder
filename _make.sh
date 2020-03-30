@@ -66,7 +66,7 @@ find . -name '*.pyc' -delete
 # Produce output
 if [[ "$RAW_MODE" = true ]]; then
     # Copy raw files to layer directory
-    echo "${CURRENT_DIR}/layer"
+    rm -rf "${CURRENT_DIR}/layer"
     mkdir -p "${CURRENT_DIR}/layer"
     cp -R /tmp/base/. "${CURRENT_DIR}/layer"
     echo "Raw layer contents have been copied to the 'layer' subdirectory"
