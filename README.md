@@ -52,6 +52,7 @@ Usage: build.sh [-p PYTHON_VER] [-n NAME] [-r] [-h] [-v]
   -p PYTHON_VER : Python version to use: 2.7, 3.6, 3.7 (default 3.7)
   -n NAME       : Name of the layer
   -r            : Raw mode, don't zip layer contents
+  -d            : Don't install Python dependencies
   -h            : Help
   -v            : Display build.sh version
 ```
@@ -82,7 +83,7 @@ rm test.xt
 
 The `_make.sh` script will then execute the commands after the Python packages have been installed.
 
-## Deinstallation
+## Uninstall
 
 If installed as submodule and need to remove
 

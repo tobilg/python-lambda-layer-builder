@@ -13,8 +13,8 @@ set -e
 #     Zip filename includes python version used in its creation
 
 scriptname=$(basename "$0")
-scriptbuildnum="1.0.0"
-scriptbuilddate="2020-03-29"
+scriptbuildnum="1.0.1"
+scriptbuilddate="2020-05-01"
 
 # Used to set destination of zip
 SUBDIR_MODE=""
@@ -31,16 +31,18 @@ usage() {
   echo -e "  -p PYTHON_VER\t: Python version to use: 2.7, 3.6, 3.7 (default 3.7)"
   echo -e "  -n NAME\t: Name of the layer"
   echo -e "  -r\t\t: Raw mode, don't zip layer contents"
+  echo -e "  -d\t\t: Don't install Python dependencies"
   echo -e "  -h\t\t: Help"
   echo -e "  -v\t\t: Display ${scriptname} version"
 }
 
 # Handle configuration
-while getopts ":p:n:rhv" arg; do
+while getopts ":p:n:drhv" arg; do
   case "${arg}" in
     p)  PYTHON_VER=${OPTARG};;
     n)  NAME=${OPTARG};;
     r)  RAW_MODE=true;;
+    d)  NO_DEPS=true;;
     h)  usage; exit;;
     v)  displayVer; exit;;
     \?) echo -e "Error - Invalid option: $OPTARG"; usage; exit;;
@@ -56,6 +58,7 @@ CURRENT_DIR=$(reldir=$(dirname -- "$0"; echo x); reldir=${reldir%?x}; cd -- "$re
 BASE_DIR=$(basename $CURRENT_DIR)
 PARENT_DIR=${CURRENT_DIR%"${BASE_DIR}"}
 RAW_MODE="${RAW_MODE:-false}"
+NO_DEPS="${NO_DEPS:-false}"
 
 # Find location of requirements.txt
 if [[ -f "${CURRENT_DIR}/requirements.txt" ]]; then
@@ -95,7 +98,7 @@ else
 fi
 
 # Run build
-docker run --rm -e PYTHON_VER="$PYTHON_VER" -e NAME="$NAME" -e RAW_MODE="$RAW_MODE" -e PARENT_DIR="${PARENT_DIR}" -e SUBDIR_MODE="$SUBDIR_MODE" -v "$CURRENT_DIR":/var/task -v "$REQ_PATH":/temp/build/requirements.txt -v "$CLEAN_PATH":/temp/build/_clean.sh "lambci/lambda:build-python${PYTHON_VER}" bash /var/task/_make.sh
+docker run --rm -e PYTHON_VER="$PYTHON_VER" -e NAME="$NAME" -e RAW_MODE="$RAW_MODE" -e NO_DEPS="$NO_DEPS" -e PARENT_DIR="${PARENT_DIR}" -e SUBDIR_MODE="$SUBDIR_MODE" -v "$CURRENT_DIR":/var/task -v "$REQ_PATH":/temp/build/requirements.txt -v "$CLEAN_PATH":/temp/build/_clean.sh "lambci/lambda:build-python${PYTHON_VER}" bash /var/task/_make.sh
 
 # Move ZIP to parent dir if SUBDIR_MODE set
 if [[ "$SUBDIR_MODE" ]]; then

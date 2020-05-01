@@ -10,14 +10,20 @@ set -e
 #     /python/lib/pythonX.X/site-packages
 
 scriptname=$(basename "$0")
-scriptbuildnum="1.0.0"
-scriptbuilddate="2020-03-29"
+scriptbuildnum="1.0.1"
+scriptbuilddate="2020-05-01"
 
 ### Variables
 CURRENT_DIR=$(reldir=$(dirname -- "$0"; echo x); reldir=${reldir%?x}; cd -- "$reldir" && pwd && echo x); CURRENT_DIR=${CURRENT_DIR%?x}
 PYTHON="python${PYTHON_VER}"
 ZIP_FILE="${NAME}_${PYTHON}.zip"
 
+if [[ "$NO_DEPS" = true ]]; then
+    DEPS_FLAG="--no-deps"
+else
+    DEPS_FLAG=""
+fi
+echo $DEPS_FLAG
 echo "Building layer: ${NAME} for ${PYTHON}"
 
 # Delete build dir
@@ -31,7 +37,7 @@ virtualenv -p $PYTHON /tmp/build
 source /tmp/build/bin/activate
 
 # Install requirements
-pip install -r /temp/build/requirements.txt --no-cache-dir
+pip install -r /temp/build/requirements.txt --no-cache-dir $DEPS_FLAG
 
 # Create staging area in dir structure req for lambda layers
 mkdir -p "/tmp/base/python/lib/${PYTHON}"
