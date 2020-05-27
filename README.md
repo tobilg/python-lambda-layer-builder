@@ -53,6 +53,7 @@ Usage: build.sh [-p PYTHON_VER] [-n NAME] [-r] [-h] [-v]
   -n NAME       : Name of the layer
   -r            : Raw mode, don't zip layer contents
   -d            : Don't install Python dependencies
+  -s            : Don't strip .so files
   -h            : Help
   -v            : Display build.sh version
 ```

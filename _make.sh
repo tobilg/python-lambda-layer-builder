@@ -56,8 +56,10 @@ rm -rf pip*
 find . -type d -name "tests" -exec rm -rf {} +
 find . -type d -name "test" -exec rm -rf {} +
 find . -type d -name "__pycache__" -exec rm -rf {} +
-find -name "*.so" -not -path "*/PIL/*" | xargs strip
-find -name "*.so.*" -not -path "*/PIL/*" | xargs strip
+if [[ "$STRIP" == true ]]; then
+    find -name "*.so" -not -path "*/PIL/*" | xargs strip
+    find -name "*.so.*" -not -path "*/PIL/*" | xargs strip
+fi
 find . -name '*.pyc' -delete
 if [[ -f "/temp/build/_clean.sh" ]]; then
     echo "Running custom cleaning script"
