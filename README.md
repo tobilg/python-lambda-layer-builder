@@ -16,7 +16,7 @@ This repo was created to address these issues:
 - Builds either a zip file or a raw directory strucutre (e.g. if you want to use frameworks like Serverless for packaging) containing Python dependencies and places the libraries into the proper directory structure for lambda layers
 - Ensures compiled libraries are compatible with Lambda environment by using the [lambci/lambda](https://hub.docker.com/r/lambci/lambda) Docker container that mimics the lambda runtime environment
 - Optimized the zip size by removing `.pyc` files and unnecessary libraries
-- allows specifying lambda supported python versions: 2.7, 3.6 and 3.7
+- Allows specifying lambda supported python versions: 2.7, 3.6, 3.7 and 3.8
 - Automatically searches for requirements.txt file in several locations:
   - same directory as script
   - parent directory or script (useful when used as submodule)
@@ -49,7 +49,7 @@ $ ./build.sh -h
 AWS Lambda Layer Builder for Python Libraries
 
 Usage: build.sh [-p PYTHON_VER] [-n NAME] [-r] [-h] [-v]
-  -p PYTHON_VER : Python version to use: 2.7, 3.6, 3.7 (default 3.7)
+  -p PYTHON_VER : Python version to use: 2.7, 3.6, 3.7, 3.8 (default 3.7)
   -n NAME       : Name of the layer
   -r            : Raw mode, don't zip layer contents
   -d            : Don't install Python dependencies
@@ -65,7 +65,7 @@ Usage: build.sh [-p PYTHON_VER] [-n NAME] [-r] [-h] [-v]
   - Parent directory of script (useful when used as submodule)
   - Function sub-directory of the parent directory (useful when used as submodule)
 - Optionally specify Python Version
-  - `-p PYTHON_VER` - specifies the Python version: 2.7, 3.6, 3.7 (default 3.6)
+  - `-p PYTHON_VER` - specifies the Python version: 2.7, 3.6, 3.7, 3.8 (default 3.7)
 
 ### Custom cleaning logic
 

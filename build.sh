@@ -28,7 +28,7 @@ displayVer() {
 usage() {
   echo -e "AWS Lambda Layer Builder for Python Libraries\n"
   echo -e "Usage: ${scriptname} [-p PYTHON_VER] [-n NAME] [-r] [-h] [-v]"
-  echo -e "  -p PYTHON_VER\t: Python version to use: 2.7, 3.6, 3.7 (default 3.7)"
+  echo -e "  -p PYTHON_VER\t: Python version to use: 2.7, 3.6, 3.7, 3.8 (default 3.7)"
   echo -e "  -n NAME\t: Name of the layer"
   echo -e "  -r\t\t: Raw mode, don't zip layer contents"
   echo -e "  -d\t\t: Don't install Python dependencies"
