@@ -27,9 +27,10 @@ displayVer() {
 # Display usage
 usage() {
   echo -e "AWS Lambda Layer Builder for Python Libraries\n"
-  echo -e "Usage: ${scriptname} [-p PYTHON_VER] [-n NAME] [-r] [-h] [-v]"
+  echo -e "Usage: ${scriptname} [-p PYTHON_VER] [-n NAME] [-f] [-r] [-h] [-v]"
   echo -e "  -p PYTHON_VER\t: Python version to use: 2.7, 3.6, 3.7, 3.8 (default 3.7)"
   echo -e "  -n NAME\t: Name of the layer"
+  echo -e "  -f REQ_PATH\t: Path to requirements file"
   echo -e "  -r\t\t: Raw mode, don't zip layer contents"
   echo -e "  -d\t\t: Don't install Python dependencies"
   echo -e "  -s\t\t: Don't strip .so files"
@@ -38,10 +39,11 @@ usage() {
 }
 
 # Handle configuration
-while getopts ":p:n:dsrhv" arg; do
+while getopts ":p:n:f:dsrhv" arg; do
   case "${arg}" in
     p)  PYTHON_VER=${OPTARG};;
     n)  NAME=${OPTARG};;
+    f)  REQ_PATH=${OPTARG};;
     r)  RAW_MODE=true;;
     d)  NO_DEPS=true;;
     s)  STRIP=false;;
@@ -64,7 +66,12 @@ NO_DEPS="${NO_DEPS:-false}"
 STRIP="${STRIP:-true}"
 
 # Find location of requirements.txt
-if [[ -f "${CURRENT_DIR}/requirements.txt" ]]; then
+if [[ -f $REQ_PATH ]]; then
+  if [[ ${REQ_PATH:0:1} != '/' ]]; then
+    REQ_PATH="$(pwd)/${REQ_PATH}"
+  fi
+  echo "Using requirements.txt from command line input"
+elif [[ -f "${CURRENT_DIR}/requirements.txt" ]]; then
   REQ_PATH="${CURRENT_DIR}/requirements.txt"
   echo "Using requirements.txt from script dir"
 elif [[ -f "${PARENT_DIR}/requirements.txt" ]]; then
