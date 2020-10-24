@@ -48,9 +48,10 @@ git submodule update --init --recursive --remote
 $ ./build.sh -h
 AWS Lambda Layer Builder for Python Libraries
 
-Usage: build.sh [-p PYTHON_VER] [-n NAME] [-r] [-h] [-v]
+Usage: build.sh [-p PYTHON_VER] [-n NAME] [-f] [-r] [-h] [-v]
   -p PYTHON_VER : Python version to use: 2.7, 3.6, 3.7, 3.8 (default 3.7)
   -n NAME       : Name of the layer
+  -f REQ_PATH	  : Path to requirements file
   -r            : Raw mode, don't zip layer contents
   -d            : Don't install Python dependencies
   -s            : Don't strip .so files
@@ -61,6 +62,7 @@ Usage: build.sh [-p PYTHON_VER] [-n NAME] [-r] [-h] [-v]
 - Run the builder with the command `./build.sh`
   - or `_build_layer/build.sh` if installed in sub-dir
 - It uses the first requirements.txt file found in these locations (in order):
+  - Input on the command line using the `-f` switch
   - Same directory as script
   - Parent directory of script (useful when used as submodule)
   - Function sub-directory of the parent directory (useful when used as submodule)
